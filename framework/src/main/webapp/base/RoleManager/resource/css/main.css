@@ -1,0 +1,26 @@
+
+.rs-action-bstop {
+	width : 20px;
+    height : 16px;
+	background: url(../images/bstop.png) 0px 0px no-repeat !important;
+}
+.rs-action-bstart {
+	width : 20px;
+    height : 16px;
+	background: url(../images/bstart.png) 0px 0px no-repeat !important;
+}
+.rs-action-brefresh {
+	width : 20px;
+    height : 16px;
+	background: url(../images/brefresh.png) 0px 0px no-repeat !important;
+}
+.rs-action-bupdate {
+	width : 20px;
+    height : 16px;
+	background: url(../images/bupdate.png) 0px 0px no-repeat !important;
+}
+.rs-action-buninstall {
+	width : 20px;
+    height : 16px;
+	background: url(../images/buninstall.png) 0px 0px no-repeat !important;
+}

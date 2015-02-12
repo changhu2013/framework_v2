@@ -1,0 +1,454 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.riambsoft</groupId>
+	<artifactId>framework</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>riambsoft framework</name>
+	<url>http://www.riambsoft.com</url>
+
+
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>http://192.168.168.252:8081/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://192.168.168.252:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.osgi</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.8.1.v20120830-144521</version>
+			<classifier>without-eclipse</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>3.2.0.RC2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.riambsoft</groupId>
+			<artifactId>framework.core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.riambsoft</groupId>
+			<artifactId>framework.core.web</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.riambsoft</groupId>
+			<artifactId>framework.core.util</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.riambsoft</groupId>
+			<artifactId>framework.core.webservice</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>framework</finalName>
+		<plugins>
+
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.25</version>
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<webDefaultXml>src/test/resources/webdefault.xml</webDefaultXml>
+					<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<formats>
+						<format>html</format>
+						<format>xml</format>
+					</formats>
+				</configuration>
+			</plugin>
+
+			<!-- | 将该项目以来的JS项目框架解压缩到指定目录 -->
+			<plugin>
+				<groupId>com.riambsoft.maven.plugins</groupId>
+				<artifactId>maven-unzip-plugin</artifactId>
+				<version>0.0.1</version>
+				<configuration>
+					<targetDirectory>src/main/webapp</targetDirectory>
+					<extracts>
+						<!-- 前端rsclient2框架项目 -->
+						<extract>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>rsclient2</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<type>zip</type>
+							<targetDirectory>src/main/webapp/pub</targetDirectory>
+						</extract>
+
+						<!-- 后台服务管理模块 -->
+
+
+					</extracts>
+
+				</configuration>
+				<executions>
+					<execution>
+						<id>unzip</id>
+						<phase>test</phase>
+						<goals>
+							<!-- 
+							<goal>unzip</goal>
+							-->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- | 将该项目依赖的OSGI Bundles 添加到指定的OSGI Bundle库 | 并修改 Bundle 的配置文件 -->
+			<plugin>
+				<groupId>com.riambsoft.maven.plugins</groupId>
+				<artifactId>maven-framework-plugin</artifactId>
+				<version>0.0.1</version>
+				<configuration>
+					<frameworkConfigurationFile>src/main/webapp/WEB-INF/classes/bundles.properties</frameworkConfigurationFile>
+					<osgiPlatformDirectory>src/main/webapp/WEB-INF/eclipse</osgiPlatformDirectory>
+					<excludeDependency>framework.*,org.junit</excludeDependency>
+					<bundles>
+
+						<!-- 以下为blueprint所需bundle -->
+						<bundle>
+							<groupId>org.slf4j</groupId>
+							<artifactId>slf4j-api</artifactId>
+							<version>1.6.4.v20120130-2120</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>org.apache.aries.blueprint</groupId>
+							<artifactId>org.apache.aries.blueprint</artifactId>
+							<version>1.0.0</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>org.apache.aries.blueprint</groupId>
+							<artifactId>org.apache.aries.blueprint.api</artifactId>
+							<version>1.0.0</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>org.apache.aries.proxy</groupId>
+							<artifactId>org.apache.aries.proxy.impl</artifactId>
+							<version>1.0.0</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>org.eclipse.persistence</groupId>
+							<artifactId>javax.persistence</artifactId>
+							<version>2.0.0</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<!-- 以下为工具模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.util</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<!-- 以下为系统配置服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.config</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>2</startLevel>
+						</bundle>
+
+						<!-- 以下为日志服务 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.log</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>3</startLevel>
+						</bundle>
+
+						<!-- 以下为核心模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>4</startLevel>
+						</bundle>
+
+						<!-- 以下为系统配置管理控制台模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.config.webconsole</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<autoStart>false</autoStart>
+						</bundle>
+
+						<!-- 以下为 Oracle数据库数据源服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.datasource</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>3</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>commons-dbcp</groupId>
+							<artifactId>commons-dbcp</artifactId>
+							<version>1.4</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>oracle.driver.osgi</artifactId>
+							<version>1.0.0</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.datasource.dbcp.oracle</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>4</startLevel>
+						</bundle>
+
+						<!-- 以下为Web服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.web</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>5</startLevel>
+						</bundle>
+
+						<!-- 以下为Web Service服务 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.webservice</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>5</startLevel>
+						</bundle>
+
+						<!-- 以下为核心POJO -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.pojo</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>1</startLevel>
+						</bundle>
+
+						<!-- 以下为核心持久层接口定义 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.dao</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>4</startLevel>
+						</bundle>
+
+						<!-- 以下为核心持久层实现模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.dao.impl</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>5</startLevel>
+						</bundle>
+						
+						<!-- 以下为核心业务层接口定义 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.service</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>6</startLevel>
+						</bundle>
+
+						<!-- 以下为用户验证模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.auth</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>2</startLevel>
+						</bundle>
+
+						<!-- 以下为用户验证数据库验证服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.auth.db</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>5</startLevel>
+						</bundle>
+
+						<!-- 用户访问管理服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.access</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>2</startLevel>
+						</bundle>
+
+						<!-- 用户访问管理验证服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.access.validate</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>5</startLevel>
+						</bundle>
+
+						<!-- 用户访问管理持久化服务模块 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>core.access.persistence</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<startLevel>5</startLevel>
+						</bundle>
+
+						<!-- 以下为系统配置管理控制台 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>console</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<type>pom</type>
+						</bundle>
+
+						<!-- 以下为子系统微博子系统 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>weibo</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<type>pom</type>
+						</bundle>
+
+						<!-- 以下为个人桌面平台子系统 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>home</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<type>pom</type>
+						</bundle>
+						
+						<!-- 以下为系统基础数据管理子系统 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>base</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<type>pom</type>
+						</bundle>
+
+						<!-- 以下为用户偏好信息管理子系统 -->
+						<bundle>
+							<groupId>com.riambsoft</groupId>
+							<artifactId>state</artifactId>
+							<version>0.0.1-SNAPSHOT</version>
+							<type>pom</type>
+						</bundle>
+
+						<!-- 测试 -->
+
+					</bundles>
+				</configuration>
+				<executions>
+					<execution>
+						<id>deploy bundles</id>
+						<phase>test</phase>
+						<goals>
+							<goal>deployBundles</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<outputFile>${project.build.directory}/dependency_tree</outputFile>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta name="keywords" content="鐧惧害鍦板浘,鐧惧害鍦板浘API锛岀栌搴﹀湴锲捐嚜瀹氢箟宸ュ叿锛岀栌搴﹀湴锲炬墍瑙佸嵆镓€寰楀伐鍏? />
+<meta name="description" content="鐧惧害鍦板浘API镊畾涔夊湴锲撅紝甯侄鐢ㄦ埛鍦ㄥ彲瑙嗗寲鎿崭綔涓嬬敓鎴愮栌搴﹀湴锲? />
+<title>鐧惧害鍦板浘API镊畾涔夊湴锲?/title>
+<!--寮旷敤鐧惧害鍦板浘API-->
+<style type="text/css">
+	html,body{margin:0;padding:0;}
+	.iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
+	.iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+</head>
+
+<body onload="initMap();">
+  <!--鐧惧害鍦板浘瀹瑰櫒-->
+  <div style="width:697px;height:550px;border:#ccc solid 1px;" id="dituContent"></div>
+</body>
+<script type="text/javascript">
+	function getParam(name) {
+		return location.href.match(new RegExp('[?&]' + name + '=([^?&]+)', 'i')) ? decodeURIComponent(RegExp.$1) : '';
+	}
+	var centerParam = getParam('center');
+	var zoomParam = getParam('zoom');
+	var widthParam = getParam('width');
+	var heightParam = getParam('height');
+	var markersParam = getParam('markers');
+	var markerStylesParam = getParam('markerStyles');
+
+	//鍒涘缓鍜屽垵濮嫔寲鍦板浘鍑芥暟锛?
+	function initMap(){
+		// [FF]鍒囨崲妯″纺鍚庢姤阌?
+		if (!window.BMap) {
+			return;
+		}
+		var dituContent = document.getElementById('dituContent');
+		dituContent.style.width = widthParam + 'px';
+		dituContent.style.height = heightParam + 'px';
+
+		createMap();//鍒涘缓鍦板浘
+		setMapEvent();//璁剧疆鍦板浘浜嬩欢
+		addMapControl();//鍚戝湴锲炬坊锷犳带浠?
+
+		// 鍒涘缓镙囨敞
+		var markersArr = markersParam.split(',');
+		var point = new BMap.Point(markersArr[0], markersArr[1]);
+		var marker = new BMap.Marker(point);
+		map.addOverlay(marker); // 灏嗘爣娉ㄦ坊锷犲埌鍦板浘涓?
+	}
+
+	//鍒涘缓鍦板浘鍑芥暟锛?
+	function createMap(){
+		var map = new BMap.Map("dituContent");//鍦ㄧ栌搴﹀湴锲惧鍣ㄤ腑鍒涘缓涓€涓湴锲?
+		var centerArr = centerParam.split(',');
+		var point = new BMap.Point(centerArr[0], centerArr[1]);//瀹氢箟涓€涓腑蹇幂偣鍧愭爣
+		map.centerAndZoom(point, zoomParam);//璁惧畾鍦板浘镄勪腑蹇幂偣鍜屽潗镙囧苟灏嗗湴锲炬樉绀哄湪鍦板浘瀹瑰櫒涓?
+		window.map = map;//灏唌ap鍙橀噺瀛桦偍鍦ㄥ叏灞€
+	}
+
+	//鍦板浘浜嬩欢璁剧疆鍑芥暟锛?
+	function setMapEvent(){
+		map.enableDragging();//鍚敤鍦板浘鎷栨嫿浜嬩欢锛岄粯璁ゅ惎鐢?鍙笉鍐?
+		map.enableScrollWheelZoom();//鍚敤鍦板浘婊氲疆鏀惧ぇ缂╁皬
+		map.enableDoubleClickZoom();//鍚敤榧犳爣鍙屽向鏀惧ぇ锛岄粯璁ゅ惎鐢?鍙笉鍐?
+		map.enableKeyboard();//鍚敤阌洏涓娄笅宸﹀彸阌Щ锷ㄥ湴锲?
+	}
+
+	//鍦板浘鎺т欢娣诲姞鍑芥暟锛?
+	function addMapControl(){
+		//鍚戝湴锲句腑娣诲姞缂╂斁鎺т欢
+	var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+	map.addControl(ctrl_nav);
+		//鍚戝湴锲句腑娣诲姞缂╃暐锲炬带浠?
+	var ctrl_ove = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:1});
+	map.addControl(ctrl_ove);
+		//鍚戝湴锲句腑娣诲姞姣斾緥灏烘带浠?
+	var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+	map.addControl(ctrl_sca);
+	}
+</script>
+</html>

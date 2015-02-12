@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+服务管理控制台子系統
+ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver">
+	</bean>
+
+	<bean id="consoleServiceController" class="com.riambsoft.framework.core.web.ServiceController">
+		<constructor-arg index="0" value="console"></constructor-arg>
+		<constructor-arg index="1" ref="serviceControllerManager"></constructor-arg>
+	</bean>
+
+	<bean name="consolePageController" class="com.riambsoft.framework.core.web.PageController" />
+
+	<!--配置控制器的映射 -->
+	<!-- 
+	 | rsc 表示后台业务服务地址
+	 | acm 表示后台业务服务权限配置,配置内容和后台业务服务地址是同一个控制器
+	 | jsp 表示前台界面地址
+	 -->
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="*.rsc">consoleServiceController</prop>
+				<prop key="*.jsp">consolePageController</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!--配置视图 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/console/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+</beans>
